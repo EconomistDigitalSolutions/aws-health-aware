@@ -564,7 +564,6 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Condition: UsingTeams    
     Properties:
-      Name: MicrosoftChannelID
       Description: Microsoft Channel ID Secret
       ReplicaRegions:
         !If 
@@ -578,9 +577,8 @@ Resources:
           Value: ChannelID
   SlackChannelSecret:
     Type: 'AWS::SecretsManager::Secret'
-    Condition: UsingSlack   
+    Condition: UsingSlack
     Properties:
-      Name: SlackChannelID
       Description: Slack Channel ID Secret
       ReplicaRegions:
         !If 
@@ -596,7 +594,6 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Condition: UsingEventBridge       
     Properties:
-      Name: EventBusName
       Description: EventBus Name Secret
       ReplicaRegions:
         !If 
@@ -612,7 +609,6 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Condition: UsingChime    
     Properties:
-      Name: ChimeChannelID
       Description: Chime Channel ID Secret
       ReplicaRegions:
         !If 
@@ -628,7 +624,6 @@ Resources:
     Type: 'AWS::SecretsManager::Secret'
     Condition: UsingCrossAccountRole    
     Properties:
-      Name: AssumeRoleArn
       Description: Management account role for AHA to assume
       ReplicaRegions:
         !If 
@@ -679,4 +674,28 @@ Resources:
             Ref: AWSHealthEventType
           MANAGEMENT_ROLE_ARN:
             Ref: ManagementAccountRoleArn
-              
+          SLACK_CHANNEL_SECRET_ARN:
+            !If
+            - UsingSlack
+            - !Ref SlackChannelSecret
+            - !Ref AWS::NoValue
+          MICROSOFT_CHANNEL_SECRET_ARN:
+            !If
+            - UsingTeams
+            - !Ref MicrosoftChannelSecret
+            - !Ref AWS::NoValue
+          CHIME_CHANNEL_SECRET_ARN:
+            !If
+            - UsingChime
+            - !Ref ChimeChannelSecret
+            - !Ref AWS::NoValue
+          EVENT_BUS_SECRET_ARN:
+            !If
+            - UsingEventBridge
+            - !Ref EventBusNameSecret
+            - !Ref AWS::NoValue
+          ASSUME_ROLE_SECRET_ARN:
+            !If
+            - UsingCrossAccountRole
+            - !Ref AssumeRoleSecret
+            - !Ref AWS::NoValue

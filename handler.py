@@ -514,17 +514,17 @@ def update_ddb(event_arn, str_update, status_code, event_details, affected_accou
                 print("No new updates found, checking again in 1 minute.")
 
 def get_secrets():
-    secret_teams_name = "MicrosoftChannelID"
-    secret_slack_name = "SlackChannelID"
-    secret_chime_name = "ChimeChannelID"
+    secret_teams_arn = os.getenv('MICROSOFT_CHANNEL_SECRET_ARN', 'Not set')
+    secret_slack_arn = os.getenv('SLACK_CHANNEL_SECRET_ARN', 'Not set')
+    secret_chime_arn = os.getenv('CHIME_CHANNEL_SECRET_ARN', 'Not set')
     region_name = os.environ['AWS_REGION']
     get_secret_value_response_assumerole = ""
     get_secret_value_response_eventbus = ""
     get_secret_value_response_chime = ""
     get_secret_value_response_teams = ""
     get_secret_value_response_slack = ""
-    event_bus_name = "EventBusName"
-    secret_assumerole_name = "AssumeRoleArn" 
+    secret_event_bus_arn = os.getenv('EVENT_BUS_SECRET_ARN', 'Not set')
+    secret_assumerole_arn = os.getenv('ASSUME_ROLE_SECRET_ARN', 'Not set')
 
     # create a Secrets Manager client
     session = boto3.session.Session()
@@ -535,7 +535,7 @@ def get_secrets():
     # Iteration through the configured AWS Secrets
     try:
         get_secret_value_response_teams = client.get_secret_value(
-            SecretId=secret_teams_name
+            SecretId=secret_teams_arn
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'AccessDeniedException':
@@ -551,7 +551,7 @@ def get_secrets():
             teams_channel_id = "None"
     try:
         get_secret_value_response_slack = client.get_secret_value(
-            SecretId=secret_slack_name
+            SecretId=secret_slack_arn
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'AccessDeniedException':
@@ -567,7 +567,7 @@ def get_secrets():
             slack_channel_id = "None"
     try:
         get_secret_value_response_chime = client.get_secret_value(
-            SecretId=secret_chime_name
+            SecretId=secret_chime_arn
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'AccessDeniedException':
@@ -583,7 +583,7 @@ def get_secrets():
             chime_channel_id = "None"
     try:
         get_secret_value_response_assumerole = client.get_secret_value(
-            SecretId=secret_assumerole_name
+            SecretId=secret_assumerole_arn
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'AccessDeniedException':
@@ -599,7 +599,7 @@ def get_secrets():
             assumerole_channel_id = "None"    
     try:
         get_secret_value_response_eventbus = client.get_secret_value(
-            SecretId=event_bus_name
+            SecretId=secret_event_bus_arn
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'AccessDeniedException':
