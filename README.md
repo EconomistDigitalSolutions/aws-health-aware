@@ -1,6 +1,29 @@
 
 ![](https://github.com/aws-samples/aws-health-aware/blob/main/readme-images/aha_banner.png?raw=1)
 
+## Development
+There are limitations in the provided AWS Health Aware solution that prevent it from being used with the AWS Health Aware Slack bot in two environments. This branch contains any customisations that need to be made.
+
+### Cloning the repo
+```shell
+$ git clone git@github.com:EconomistDigitalSolutions/aws-health-aware.git
+$ git remote add upstream git@github.com:aws-samples/aws-health-aware.git
+```
+
+GitHub has some helpful documentation on [working with forks](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks).
+
+### Deploying changes
+The stacks are deployed to 054133242062 so all actions should be followed there.
+
+If the Lambda code has changed:
+1. Package the files to a **uniquely named file**. The Lambda won't update if the filename is the same.
+   1. E.g. `zip -r aha-2.0.4.economist.zip handler.py messagegenerator.py`
+2. Upload the file to the `aws-health-aware-files-054133242062` S3 bucket
+
+
+1. Update the Stack
+   1. `AWS-Health-Aware-Dev` is best for development and testing. `AWS-Health-Aware` is the stack you need when everything is stable and ready for production use.
+   2. Change the `S3Key` parameter to match the filename if the Lambda code has changed.
 
 **Table of Contents**
 
